@@ -6,12 +6,11 @@
 ### money dollar removes all the monetary suffixes on your webpages and replaces them with much more affordable amounts. take a look:
 
 <div align="center">
-  <h3>before</h3>
-  <img src="./before.png" alt="before: showing large monetary amounts">
-  
-  <h3>after</h3>
-  <img src="./after.png" alt="after: showing reduced amounts">
+  <h3> it makes elon poor</h3>
+  <img src="./assets/before-after.png" alt="after: showing reduced amounts">
+  <h3>it makes the news funny</h3>
+  <img src="./assets/realistic.png" alt="after: showing reduced amounts">
 </div>
 
 ### TODO:
-- chrome support
+- land a $10 dollar series A
