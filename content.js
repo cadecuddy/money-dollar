@@ -56,7 +56,7 @@
         'gi'
       ),
       fn: (match, sym, amount, _mag, hasAfter) =>
-        hasAfter ? `${sym}${amount} ${currencyWord(sym)}` : `${sym}${amount}`
+        hasAfter ? `${sym}${amount}` : `${sym}${amount}`
     },
 
     {
@@ -72,7 +72,7 @@
     {
       re: new RegExp(`([${SYMBOLS}])\\s*(\\d+),(\\d{3}(?:,\\d{3})*)(?:\\.\\d+)?\\b`, 'gi'),
       fn: (match, sym, beforeComma, _rest, hasAfter) =>
-        hasAfter ? `${sym}${beforeComma} ${currencyWord(sym)}` : `${sym}${beforeComma}`
+        hasAfter ? `${sym}${beforeComma}` : `${sym}${beforeComma}`
     },
 
     {
@@ -84,7 +84,7 @@
         'giu'
       ),
       fn: (match, sym, amount, hasAfter) =>
-        hasAfter ? `${sym}${amount} ${currencyWord(sym)}` : `${sym}${amount}`
+        hasAfter ? `${sym}${amount}` : `${sym}${amount}`
     }
   ];
 
