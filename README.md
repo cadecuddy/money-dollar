@@ -14,3 +14,6 @@
 
 ### TODO:
 - land a $10 dollar series A
+
+### contribute
+if you wanna add something, make a PR and I will review it.
