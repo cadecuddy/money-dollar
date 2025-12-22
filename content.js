@@ -21,13 +21,21 @@
     '₫': 'dong'
   };
 
-  const currencyWord = (symbol) => currencyNames[symbol] || 'money';
-
   // If the tail after a match contains ANY letter/number, treat that as "text after".
   // (So punctuation like "." or ")" doesn't count as "text after".)
   const hasMeaningfulTextAfter = (fullString, offset, matchLen) => {
     const tail = fullString.slice(offset + matchLen);
     return /[\p{L}\p{N}]/u.test(tail);
+  };
+
+  // If amount has exactly 1 decimal digit, pad to 2 decimals: 6.6 -> 6.60
+  const padHundredths = (amountStr) => {
+    const m = amountStr.match(/^(\d+(?:,\d{3})*)(?:\.(\d+))?$/);
+    if (!m) return amountStr;
+    const intPart = m[1];
+    const dec = m[2];
+    if (dec && dec.length === 1) return `${intPart}.${dec}0`;
+    return amountStr;
   };
 
   const SKIP_SELECTOR =
@@ -45,36 +53,37 @@
     .map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
     .join('|');
 
+  // Marker to prevent later patterns from re-adding/altering suffix-collapsed values
   const NO_WORD_MARK = '\uE000';
 
   const NUM = '(\\d+(?:,\\d{3})*(?:\\.\\d+)?)';
 
   const patterns = [
+    // $6.6 billion -> $6.60
     {
-      re: new RegExp(
-        `([${SYMBOLS}])\\s*${NUM}\\s+(million|billion|trillion|thousand)\\b`,
-        'gi'
-      ),
-      fn: (match, sym, amount, _mag, hasAfter) =>
-        hasAfter ? `${sym}${amount}` : `${sym}${amount}`
+      re: new RegExp(`([${SYMBOLS}])\\s*${NUM}\\s+(million|billion|trillion|thousand)\\b`, 'gi'),
+      fn: (_match, sym, amount) => `${sym}${padHundredths(amount)}`
     },
 
+    // $6.6bn -> $6.60 (and prevent later "plain" rule from touching it)
     {
       re: new RegExp(`([${SYMBOLS}])\\s*${NUM}\\s*bn\\b`, 'gi'),
-      fn: (match, sym, amount) => `${sym}${amount}${NO_WORD_MARK}`
+      fn: (_match, sym, amount) => `${sym}${padHundredths(amount)}${NO_WORD_MARK}`
     },
 
+    // $6.6m / $6.6k / $6.6b / $6.6t -> $6.60 (and prevent later "plain" rule from touching it)
     {
       re: new RegExp(`([${SYMBOLS}])\\s*${NUM}\\s*[kmbt]\\b`, 'gi'),
-      fn: (match, sym, amount) => `${sym}${amount}${NO_WORD_MARK}`
+      fn: (_match, sym, amount) => `${sym}${padHundredths(amount)}${NO_WORD_MARK}`
     },
 
+    // $20,000,000 -> $20 (your intentionally-destructive behavior)
     {
       re: new RegExp(`([${SYMBOLS}])\\s*(\\d+),(\\d{3}(?:,\\d{3})*)(?:\\.\\d+)?\\b`, 'gi'),
-      fn: (match, sym, beforeComma, _rest, hasAfter) =>
-        hasAfter ? `${sym}${beforeComma}` : `${sym}${beforeComma}`
+      fn: (_match, sym, beforeComma) => `${sym}${beforeComma}`
     },
 
+    // Plain $6.6 -> $6.60 (unless it already has a currency word, or has the NO_WORD_MARK)
     {
       re: new RegExp(
         `([${SYMBOLS}])\\s*${NUM}\\b` +
@@ -83,8 +92,7 @@
           `(?!${NO_WORD_MARK})`,
         'giu'
       ),
-      fn: (match, sym, amount, hasAfter) =>
-        hasAfter ? `${sym}${amount}` : `${sym}${amount}`
+      fn: (_match, sym, amount) => `${sym}${padHundredths(amount)}`
     }
   ];
 
@@ -114,9 +122,11 @@
         const fullString = args[args.length - 1];
         const groups = args.slice(1, -2);
 
-        const hasAfter = hasMeaningfulTextAfter(fullString, offset, match.length);
+        // kept in case you want to use it later again
+        void hasMeaningfulTextAfter(fullString, offset, match.length);
+
         changed = true;
-        return fn(match, ...groups, hasAfter);
+        return fn(match, ...groups);
       });
     }
 
