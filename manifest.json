@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "money dollar",
   "version": "1.0.0",
-  "description": "removes monetary suffixes to make large number small",
+  "description": "removes monetary suffixes to make large numbers small",
   "icons": {
     "16": "assets/favicon-16x16.png",
     "32": "assets/favicon-32x32.png",
