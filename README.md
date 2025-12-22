@@ -1,7 +1,7 @@
 <div align="center">
    <h1>money dollar</h1>
   <img src="./logo.png" alt="logo">
-</div>|
+</div>
 
 ### money dollar removes all the monetary suffixes on your webpages and replaces them with much more affordable amounts. take a look:
 

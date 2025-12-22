@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "money dollar",
   "version": "1.0.0",
-  "description": "Removes money suffixes to make large transactions hilariously small (e.g., $12 million → $12)",
+  "description": "removes monetary suffixes to make large number small",
   "icons": {
     "16": "icons/favicon-16x16.png",
     "32": "icons/favicon-32x32.png",
