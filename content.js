@@ -21,12 +21,6 @@
     '₫': 'dong'
   };
 
-  const hasMeaningfulTextAfter = (fullString, offset, matchLen) => {
-    const tail = fullString.slice(offset + matchLen);
-    return /[\p{L}\p{N}]/u.test(tail);
-  };
-
-  const padHundredths = (amountStr) => {
     const m = amountStr.match(/^(\d+(?:,\d{3})*)(?:\.(\d+))?$/);
     if (!m) return amountStr;
     const intPart = m[1];
@@ -111,8 +105,6 @@
         const offset = args[args.length - 2];
         const fullString = args[args.length - 1];
         const groups = args.slice(1, -2);
-
-        void hasMeaningfulTextAfter(fullString, offset, match.length);
 
         changed = true;
         return fn(match, ...groups);
