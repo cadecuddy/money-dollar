@@ -2,6 +2,11 @@
 (() => {
   'use strict';
 
+  const api = typeof browser !== 'undefined' ? browser : chrome;
+
+  const TOGGLE_STORAGE_KEY = 'moneyDollarEnabled';
+  let isEnabled = true;
+
   const SYMBOLS = '$€£¥₹₩₽₺₫₴₦฿₱';
   const currencySymbolRe = new RegExp(`[${SYMBOLS}]`);
 
@@ -83,6 +88,7 @@
   ];
 
   function shouldProcessTextNode(node) {
+    if (!isEnabled) return false;
     if (!node || node.nodeType !== Node.TEXT_NODE) return false;
 
     const txt = node.textContent || '';
@@ -212,13 +218,40 @@
     };
   })();
 
+  async function checkState() {
+    try {
+      const result = await api.storage.local.get([TOGGLE_STORAGE_KEY]);
+      isEnabled = result[TOGGLE_STORAGE_KEY] !== false;
+    } catch (error) {
+      console.error('Error checking toggle state:', error);
+      isEnabled = false;
+    }
+  }
+
+  api.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === 'TOGGLE_STATE') {
+      isEnabled = message.enabled;
+      if (isEnabled && document.body) {
+        enqueueSubtree(document.body);
+      }
+    }
+    return true;
+  });
+
   function init() {
     if (!document.body) {
       setTimeout(init, 100);
       return;
     }
-    observeRoot(document.body);
-    enqueueSubtree(document.body);
+
+    checkState().then(() => {
+      if (isEnabled) {
+        observeRoot(document.body);
+        enqueueSubtree(document.body);
+      } else {
+        observeRoot(document.body);
+      }
+    });
   }
 
   if (document.readyState === 'loading') {

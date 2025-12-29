@@ -12,8 +12,14 @@
     "512": "assets/android-chrome-512x512.png"
   },
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
+  "action": {
+    "default_icon": "assets/active.png",
+    "default_title": "money dollar",
+    "default_popup": "toggle.html"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

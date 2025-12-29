@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      width: 150px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: #FFFFFF;
+    }
+    
+    .toggle-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .toggle-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+    }
+    
+    .status-text {
+      font-size: 12px;
+      font-weight: bold;
+      color: #666;
+      text-align: center;
+    }
+    
+    .toggle-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.2s ease;
+    }
+    
+    .toggle-button:hover {
+      transform: scale(1.05);
+    }
+    
+    .toggle-button:active {
+      transform: scale(0.95);
+    }
+    
+    .toggle-icon {
+      width: 128px;
+      height: 128px;
+      display: block;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="toggle-container">
+    <div>
+        <div class="toggle-label">money dollar</div>
+        <div id="statusText" class="status-text">Active</div>
+    </div>
+    <button id="toggleBtn" class="toggle-button" aria-label="Toggle extension">
+      <img id="toggleIcon" class="toggle-icon" src="assets/active.png" alt="Extension state">
+    </button>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
