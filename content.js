@@ -21,13 +21,14 @@
     '₫': 'dong'
   };
 
+  function padHundredths(amountStr) {
     const m = amountStr.match(/^(\d+(?:,\d{3})*)(?:\.(\d+))?$/);
     if (!m) return amountStr;
     const intPart = m[1];
     const dec = m[2];
     if (dec && dec.length === 1) return `${intPart}.${dec}0`;
     return amountStr;
-  };
+  }
 
   const SKIP_SELECTOR =
     'script,style,noscript,textarea,input,option,pre,code,kbd,samp,[contenteditable="true"]';
@@ -72,9 +73,9 @@
     {
       re: new RegExp(
         `([${SYMBOLS}])\\s*${NUM}\\b` +
-          `(?![.,]\\d)` +
-          `(?!\\s*(?:${currencyWordList})\\b)` +
-          `(?!${NO_WORD_MARK})`,
+        `(?![.,]\\d)` +
+        `(?!\\s*(?:${currencyWordList})\\b)` +
+        `(?!${NO_WORD_MARK})`,
         'giu'
       ),
       fn: (_match, sym, amount) => `${sym}${padHundredths(amount)}`
@@ -206,7 +207,7 @@
       try {
         observeRoot(shadow);
         enqueueSubtree(shadow);
-      } catch (_) {}
+      } catch (_) { }
       return shadow;
     };
   })();
